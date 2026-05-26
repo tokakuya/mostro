@@ -1,11 +1,26 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { getMangaEpisodes } from '../lib/manga';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const episodes = getMangaEpisodes();
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="話数一覧">
+	<div class="min-h-screen bg-base-300 p-6">
+		<h1 class="mb-6 text-2xl font-bold">話数一覧</h1>
+		<ul class="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+			{
+				episodes.map((episode) => (
+					<li>
+						<a
+							href={`/manga/${episode.id}`}
+							class="btn btn-block btn-outline btn-sm"
+						>
+							第{episode.id}話
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</div>
 </Layout>
