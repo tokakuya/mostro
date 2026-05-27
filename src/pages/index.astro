@@ -3,24 +3,144 @@ import Layout from '../layouts/Layout.astro';
 import { getMangaEpisodes } from '../lib/manga';
 
 const episodes = getMangaEpisodes();
+
+const heroCandidates = import.meta.glob<{ default: { src: string; width: number; height: number } }>(
+	'../assets/top/**/top.*',
+	{ eager: true },
+);
+
+function pickHero() {
+	const entries = Object.entries(heroCandidates).map(([path, mod]) => ({
+		path,
+		image: mod.default,
+	}));
+
+	const preferWebp = entries.find((e) => e.path.endsWith('/top.webp'));
+	if (preferWebp) return preferWebp.image;
+
+	const preferJpg = entries.find((e) => e.path.endsWith('/top.jpg'));
+	if (preferJpg) return preferJpg.image;
+
+	return undefined;
+}
+
+const hero = pickHero();
+const latest = episodes.at(-1);
+const latestLabel = latest ? `第${latest.id}話` : '';
 ---
 
-<Layout title="話数一覧">
-	<div class="min-h-screen bg-base-300 p-6">
-		<h1 class="mb-6 text-2xl font-bold">話数一覧</h1>
-		<ul class="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-			{
-				episodes.map((episode) => (
-					<li>
-						<a
-							href={`/manga/${episode.id}`}
-							class="btn btn-block btn-outline btn-sm"
-						>
-							第{episode.id}話
+<Layout title="TOP">
+	<div class="min-h-screen bg-base-300">
+		<div class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 p-6 lg:grid-cols-[220px_1fr_260px]">
+			<aside class="flex flex-col gap-6">
+				<div class="flex flex-col items-center gap-2 pt-2">
+					<div class="text-xl font-bold tracking-wide">桃色CODE</div>
+				</div>
+
+				<nav class="menu rounded-box bg-base-100 p-3 shadow-sm">
+					<ul class="menu-sm">
+						<li><a class="font-semibold text-primary">TOP</a></li>
+						<li><a href="#" aria-disabled="true">ブログ</a></li>
+						<li><a href="#" aria-disabled="true">版権絵</a></li>
+						<li><a href="#" aria-disabled="true">みちくさひめがー</a></li>
+					</ul>
+				</nav>
+
+				<div class="rounded-box bg-base-100 p-4 text-sm shadow-sm">
+					<div class="opacity-70">お知らせ</div>
+					<div class="mt-2">04-01 ホームページをリニューアルしました</div>
+				</div>
+
+				<div class="rounded-box bg-base-100 p-4 text-sm shadow-sm">
+					<div class="opacity-70">ご利用の注意</div>
+					<div class="mt-2">R18の作品もあります。ご留意ください。</div>
+				</div>
+			</aside>
+
+			<main class="flex justify-center">
+				<div class="w-full max-w-[560px]">
+					<div class="rounded-box bg-base-100 p-3 shadow-sm">
+						{hero ? (
+							<img
+								src={hero.src}
+								width={hero.width}
+								height={hero.height}
+								alt="top"
+								class="h-auto w-full rounded-box"
+								decoding="async"
+								loading="eager"
+							/>
+						) : (
+							<div class="flex aspect-[4/3] w-full items-center justify-center rounded-box bg-base-200 text-sm opacity-70">
+								hero image not found
+							</div>
+						)}
+						{latest ? (
+							<div class="mt-3 flex items-center justify-between gap-3">
+								<div class="text-sm opacity-70">最新: {latestLabel}</div>
+								<a class="btn btn-sm btn-primary" href={`/manga/${latest.id}`}>
+									読む
+								</a>
+							</div>
+						) : null}
+					</div>
+				</div>
+			</main>
+
+			<aside class="flex flex-col gap-4">
+				<div class="rounded-box bg-base-100 p-4 shadow-sm">
+					<div class="text-xs font-semibold opacity-70">ぱっく〜と読めマ</div>
+					<div class="mt-3 flex items-center justify-between gap-3">
+						<div class="text-sm">{latestLabel}</div>
+						<a class="btn btn-sm btn-outline" href={latest ? `/manga/${latest.id}` : '/manga'}>
+							読む
 						</a>
-					</li>
-				))
-			}
-		</ul>
+					</div>
+				</div>
+
+				<div class="rounded-box bg-base-100 p-4 shadow-sm">
+					<div class="text-sm font-semibold">サイトの設定</div>
+					<div class="mt-3 flex items-center justify-between">
+						<span class="text-sm">DarkMode</span>
+						<input id="theme-toggle" type="checkbox" class="toggle" />
+					</div>
+				</div>
+
+				<div class="rounded-box bg-base-100 p-4 shadow-sm">
+					<div class="text-sm font-semibold">話数</div>
+					<div class="mt-3 max-h-[420px] overflow-auto">
+						<ul class="menu menu-sm">
+							{
+								[...episodes]
+									.slice()
+									.reverse()
+									.map((episode) => (
+										<li>
+											<a href={`/manga/${episode.id}`}>第{episode.id}話</a>
+										</li>
+									))
+							}
+						</ul>
+					</div>
+				</div>
+			</aside>
+		</div>
 	</div>
+
+	<script is:inline>
+		{String.raw`
+(() => {
+  const toggle = document.getElementById('theme-toggle');
+  if (!(toggle instanceof HTMLInputElement)) return;
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme');
+  toggle.checked = current === 'dark';
+  toggle.addEventListener('change', () => {
+    const next = toggle.checked ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch {}
+  });
+})();
+`}
+	</script>
 </Layout>
