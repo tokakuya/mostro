@@ -1,12 +1,10 @@
 import type { ImageMetadata } from 'astro';
+import { comparePageKeys, parseMangaFilename } from './mangaParse';
 
 const mangaImages = import.meta.glob<{ default: ImageMetadata }>(
-	'../assets/manga/*.jpg',
+	'../assets/manga/*/*.jpg',
 	{ eager: true },
 );
-
-/** `20-3.jpg` → 話数 20、ページキー `3` / `18.jpg` → 話数 18、ページキーなし */
-const FILE_PATTERN = /^(\d+)(?:-(.+))?$/;
 
 export type MangaPage = {
 	filename: string;
@@ -18,30 +16,6 @@ export type MangaEpisode = {
 	id: number;
 	pages: MangaPage[];
 };
-
-function parsePageKey(suffix: string | undefined): number[] {
-	if (!suffix) return [0];
-	return suffix.split('-').map((part) => Number.parseInt(part, 10) || 0);
-}
-
-function comparePageKeys(a: number[], b: number[]): number {
-	const len = Math.max(a.length, b.length);
-	for (let i = 0; i < len; i++) {
-		const diff = (a[i] ?? 0) - (b[i] ?? 0);
-		if (diff !== 0) return diff;
-	}
-	return 0;
-}
-
-function parseMangaFilename(filename: string): { episodeId: number; pageKey: number[] } | null {
-	const base = filename.replace(/\.jpg$/i, '');
-	const match = base.match(FILE_PATTERN);
-	if (!match) return null;
-	return {
-		episodeId: Number.parseInt(match[1], 10),
-		pageKey: parsePageKey(match[2]),
-	};
-}
 
 function buildEpisodes(): MangaEpisode[] {
 	const byEpisode = new Map<number, MangaPage[]>();
