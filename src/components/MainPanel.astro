@@ -1,6 +1,6 @@
 ---
 
-import { getMangaEpisodes } from '../lib/manga';
+import { getMangaEpisodes } from '../lib/mangaData';
 const episodes = getMangaEpisodes();
 function pickHero() {
 	const heroCandidates = import.meta.glob<{ default: { src: string; width: number; height: number } }>(
@@ -23,7 +23,7 @@ function pickHero() {
 
 const hero = pickHero();
 const latest = episodes.at(-1);
-const latestLabel = latest ? `第${latest.id}話` : '';
+const latestLabel = latest ? `第${latest.Index}話 ${latest.Title}` : '';
 
 ---
 <div class="w-full max-w-[560px]">
@@ -46,7 +46,7 @@ const latestLabel = latest ? `第${latest.id}話` : '';
         {latest ? (
             <div class="flex items-center justify-between gap-3 border-t border-base-300 p-3">
                 <div class="text-sm opacity-70">最新: {latestLabel}</div>
-                <a class="btn btn-sm btn-primary" href={`/viewer?page=${latest.id}`}>
+                <a class="btn btn-sm btn-primary" href={`/viewer?page=${latest.Index}`}>
                     読む
                 </a>
             </div>

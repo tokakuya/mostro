@@ -1,5 +1,6 @@
 {
   "extends": "astro/tsconfigs/strict",
+  "lib": ["ES2022","DOM"],
   "include": [
     ".astro/types.d.ts",
     "**/*",

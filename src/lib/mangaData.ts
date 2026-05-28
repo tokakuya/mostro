@@ -70,9 +70,14 @@ function buildEpisodes(): MangaEpisode[] {
                 ImageUrl: indexed.map((v) => v.url),
             };
         })
-        .sort((a, b) => Number(a.Index) - Number(b.Index));
+        .sort((a, b) => episodeSortKey(a.Index) - episodeSortKey(b.Index));
 }
 
+/** Index は数値順。"ri" のみ 80 と 81 の間（80.5 相当） */
+function episodeSortKey(index: number | string): number {
+    if (index === 'ri') return 80.5;
+    return Number(index);
+}
 
 let cachedEpisodes: MangaEpisode[] | undefined;
 
