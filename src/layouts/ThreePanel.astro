@@ -6,6 +6,7 @@ import MobileFooter from '../components/widget/MobileFooter.astro';
 import MobileHeader from '../components/widget/MobileHeader.astro';
 import ContentColumn from '../components/widget/ContentColumn.astro';
 import SiteLogo from '../components/widget/SiteLogo.astro';
+import SiteFooter from '../components/widget/SiteFooter.astro';
 import SiteNav from '../components/widget/SiteNav.astro';
 import ThemeToggle from '../components/widget/ThemeToggle.astro';
 import ThemeToggleScript from '../components/widget/ThemeToggleScript.astro';
@@ -84,6 +85,8 @@ const hasDrawer = Astro.slots.has('drawer');
 					}
 				</aside>
 			</div>
+
+			<SiteFooter />
 		</div>
 
 		<!-- Mobile: header + drawer -->

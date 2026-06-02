@@ -1,0 +1,11 @@
+---
+interface Props {
+	class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<footer class:list={['mt-24 pb-6 text-center text-xs text-base-content/50', className]}>
+	<div>©momotori, ©iranika April 2024+</div>
+</footer>
