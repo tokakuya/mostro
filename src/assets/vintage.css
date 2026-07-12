@@ -25,8 +25,9 @@ html[data-vintage='true'] body {
 	overflow: hidden;
 }
 
-/* Frameset-style layout (旧サイト cols="10%,*") */
+/* Frameset-style layout (旧サイト <frameset cols="10%,*"> 相当) */
 .vintage-frameset {
+	--vintage-menu-width: 10%;
 	display: flex;
 	height: 100%;
 	width: 100%;
@@ -34,9 +35,10 @@ html[data-vintage='true'] body {
 }
 
 .vintage-menu-column {
-	flex: 0 0 10%;
-	min-width: 120px;
-	max-width: 200px;
+	flex: 0 0 var(--vintage-menu-width);
+	width: var(--vintage-menu-width);
+	min-width: 0;
+	max-width: none;
 	height: 100%;
 	color: #000;
 	background-color: #86b404;
@@ -46,6 +48,37 @@ html[data-vintage='true'] body {
 	overflow-y: scroll;
 	font-size: medium;
 	-webkit-overflow-scrolling: touch;
+}
+
+/* 本家 frameset のリサイズ可能な境界線 */
+.vintage-frameset-resizer {
+	flex: 0 0 6px;
+	width: 6px;
+	margin: 0;
+	padding: 0;
+	border: none;
+	border-left: 1px solid #fff;
+	border-right: 1px solid #808080;
+	background: #c0c0c0;
+	cursor: col-resize;
+	touch-action: none;
+	align-self: stretch;
+}
+
+.vintage-frameset-resizer:hover,
+.vintage-frameset-resizer:focus-visible {
+	background: #a8a8a8;
+	outline: none;
+}
+
+.vintage-frameset.is-resizing {
+	cursor: col-resize;
+}
+
+.vintage-frameset.is-resizing .vintage-menu-column,
+.vintage-frameset.is-resizing .vintage-content-column {
+	pointer-events: none;
+	user-select: none;
 }
 
 .vintage-content-column {
@@ -237,7 +270,8 @@ html[data-vintage='true'] .vintage-content-column > :global(*) {
 		overflow: visible;
 	}
 
-	.vintage-menu-column {
+	.vintage-menu-column,
+	.vintage-frameset-resizer {
 		display: none;
 	}
 

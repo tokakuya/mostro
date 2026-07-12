@@ -32,13 +32,107 @@ const contentClass =
 		</div>
 	</div>
 
-	<!-- Desktop frameset -->
-	<div class="vintage-frameset">
-		<aside class="vintage-menu-column">
+	<!-- Desktop frameset（本家 cols="10%,*" 相当・境界ドラッグでリサイズ可） -->
+	<div class="vintage-frameset" data-vintage-frameset>
+		<aside class="vintage-menu-column" data-vintage-menu-column>
 			<VintageMenu episodes={episodes} menuInstanceId="desktop" />
 		</aside>
-		<main class={contentClass}>
+		<div
+			class="vintage-frameset-resizer"
+			role="separator"
+			aria-orientation="vertical"
+			aria-label="メニューとコンテンツの境界をリサイズ"
+			aria-controls="vintage-content"
+			tabindex="0"
+			data-vintage-resizer
+		></div>
+		<main id="vintage-content" class={contentClass}>
 			<slot />
 		</main>
 	</div>
 </div>
+
+<script is:inline>
+	(() => {
+		const MIN_PX = 40;
+		const frameset = document.querySelector('[data-vintage-frameset]');
+		const menu = document.querySelector('[data-vintage-menu-column]');
+		const resizer = document.querySelector('[data-vintage-resizer]');
+		if (!(frameset instanceof HTMLElement) || !(menu instanceof HTMLElement) || !(resizer instanceof HTMLElement)) {
+			return;
+		}
+
+		// 以前の実装で残った幅をクリア（リロードで常に初期の 10% に戻す）
+		try {
+			localStorage.removeItem('vintage-menu-width');
+		} catch {}
+
+		const maxPx = () => Math.max(MIN_PX, frameset.clientWidth - MIN_PX - resizer.offsetWidth);
+
+		const applyWidth = (px) => {
+			const clamped = Math.max(MIN_PX, Math.min(maxPx(), px));
+			frameset.style.setProperty('--vintage-menu-width', `${Math.round(clamped)}px`);
+			resizer.setAttribute('aria-valuenow', String(Math.round(clamped)));
+			return clamped;
+		};
+
+		const currentWidth = () => menu.getBoundingClientRect().width;
+
+		resizer.setAttribute('aria-valuemin', String(MIN_PX));
+		resizer.setAttribute('aria-valuemax', String(maxPx()));
+		resizer.setAttribute('aria-valuenow', String(Math.round(currentWidth())));
+
+		let dragging = false;
+
+		const onPointerMove = (event) => {
+			if (!dragging) return;
+			const rect = frameset.getBoundingClientRect();
+			applyWidth(event.clientX - rect.left);
+		};
+
+		const onPointerUp = () => {
+			if (!dragging) return;
+			dragging = false;
+			frameset.classList.remove('is-resizing');
+			document.body.style.removeProperty('cursor');
+			document.body.style.removeProperty('user-select');
+		};
+
+		resizer.addEventListener('pointerdown', (event) => {
+			if (event.button != null && event.button !== 0) return;
+			dragging = true;
+			frameset.classList.add('is-resizing');
+			document.body.style.cursor = 'col-resize';
+			document.body.style.userSelect = 'none';
+			resizer.setPointerCapture?.(event.pointerId);
+			event.preventDefault();
+		});
+
+		resizer.addEventListener('pointermove', onPointerMove);
+		resizer.addEventListener('pointerup', onPointerUp);
+		resizer.addEventListener('pointercancel', onPointerUp);
+		window.addEventListener('pointerup', onPointerUp);
+
+		resizer.addEventListener('keydown', (event) => {
+			const step = event.shiftKey ? 40 : 10;
+			if (event.key === 'ArrowLeft') {
+				event.preventDefault();
+				applyWidth(currentWidth() - step);
+			} else if (event.key === 'ArrowRight') {
+				event.preventDefault();
+				applyWidth(currentWidth() + step);
+			} else if (event.key === 'Home') {
+				event.preventDefault();
+				applyWidth(frameset.clientWidth * 0.1);
+			}
+		});
+
+		window.addEventListener('resize', () => {
+			resizer.setAttribute('aria-valuemax', String(maxPx()));
+			// ビューポート縮小でメニューがはみ出したらクランプ
+			if (currentWidth() > maxPx()) {
+				applyWidth(maxPx());
+			}
+		});
+	})();
+</script>
