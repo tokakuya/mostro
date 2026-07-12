@@ -54,7 +54,6 @@ const contentClass =
 
 <script is:inline>
 	(() => {
-		const WIDTH_KEY = 'vintage-menu-width';
 		const MIN_PX = 40;
 		const frameset = document.querySelector('[data-vintage-frameset]');
 		const menu = document.querySelector('[data-vintage-menu-column]');
@@ -62,6 +61,11 @@ const contentClass =
 		if (!(frameset instanceof HTMLElement) || !(menu instanceof HTMLElement) || !(resizer instanceof HTMLElement)) {
 			return;
 		}
+
+		// 以前の実装で残った幅をクリア（リロードで常に初期の 10% に戻す）
+		try {
+			localStorage.removeItem('vintage-menu-width');
+		} catch {}
 
 		const maxPx = () => Math.max(MIN_PX, frameset.clientWidth - MIN_PX - resizer.offsetWidth);
 
@@ -73,21 +77,6 @@ const contentClass =
 		};
 
 		const currentWidth = () => menu.getBoundingClientRect().width;
-
-		const persist = () => {
-			try {
-				localStorage.setItem(WIDTH_KEY, String(Math.round(currentWidth())));
-			} catch {}
-		};
-
-		// 保存済み幅があれば復元。なければ本家どおり CSS の 10% を使う
-		try {
-			const saved = localStorage.getItem(WIDTH_KEY);
-			if (saved != null) {
-				const n = Number.parseFloat(saved);
-				if (Number.isFinite(n) && n > 0) applyWidth(n);
-			}
-		} catch {}
 
 		resizer.setAttribute('aria-valuemin', String(MIN_PX));
 		resizer.setAttribute('aria-valuemax', String(maxPx()));
@@ -107,7 +96,6 @@ const contentClass =
 			frameset.classList.remove('is-resizing');
 			document.body.style.removeProperty('cursor');
 			document.body.style.removeProperty('user-select');
-			persist();
 		};
 
 		resizer.addEventListener('pointerdown', (event) => {
@@ -130,15 +118,12 @@ const contentClass =
 			if (event.key === 'ArrowLeft') {
 				event.preventDefault();
 				applyWidth(currentWidth() - step);
-				persist();
 			} else if (event.key === 'ArrowRight') {
 				event.preventDefault();
 				applyWidth(currentWidth() + step);
-				persist();
 			} else if (event.key === 'Home') {
 				event.preventDefault();
 				applyWidth(frameset.clientWidth * 0.1);
-				persist();
 			}
 		});
 
@@ -147,7 +132,6 @@ const contentClass =
 			// ビューポート縮小でメニューがはみ出したらクランプ
 			if (currentWidth() > maxPx()) {
 				applyWidth(maxPx());
-				persist();
 			}
 		});
 	})();
