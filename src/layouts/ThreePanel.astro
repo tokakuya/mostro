@@ -33,7 +33,6 @@ const episodes = getMangaEpisodes();
 const latest = episodes.at(-1);
 
 const hasLeft = Astro.slots.has('left');
-const hasRight = Astro.slots.has('right');
 const hasMobileFooter = Astro.slots.has('mobile-footer');
 const hasMobile = Astro.slots.has('mobile');
 const hasDrawer = Astro.slots.has('drawer');
@@ -41,10 +40,10 @@ const hasDrawer = Astro.slots.has('drawer');
 
 <Layout title={title}>
 	<div class="site-modern min-h-screen bg-base-100">
-		<!-- Desktop: 3 columns -->
+		<!-- Desktop: left sidebar + expanded content -->
 		<div class="hidden lg:block">
 			<div
-				class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 p-6 lg:grid-cols-[220px_1fr_260px]"
+				class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 p-6 lg:grid-cols-[220px_1fr]"
 			>
 				<aside class="flex flex-col gap-6">
 					{
@@ -57,22 +56,9 @@ const hasDrawer = Astro.slots.has('drawer');
 								</div>
 
 								<SiteNav class="p-3" />
-								<InfoSections />
-							</>
-						)
-					}
-				</aside>
 
-				<main class="flex justify-center">
-					<slot />
-				</main>
+								<SiteSettings />
 
-				<aside class="flex flex-col gap-4">
-					{
-						hasRight ? (
-							<slot name="right" />
-						) : (
-							<>
 								<div class="border border-base-300 bg-base-100 p-4">
 									<LatestEpisodeCard
 										latest={latest}
@@ -83,11 +69,15 @@ const hasDrawer = Astro.slots.has('drawer');
 									<EpisodeList episodes={episodes} />
 								</div>
 
-								<SiteSettings />
+								<InfoSections />
 							</>
 						)
 					}
 				</aside>
+
+				<main class="min-w-0 flex justify-center">
+					<slot />
+				</main>
 			</div>
 
 			<SiteFooter />
