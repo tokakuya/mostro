@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import type { MangaEpisode } from '../lib/mangaData';
+import { formatEpisodeLabel } from '../lib/mangaData';
 
 function debounce<T extends (...args: any[]) => void>(fn: T, wait: number) {
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -161,6 +162,15 @@ watch(
   () => {
     visibleIndices.value = createInitialIndices(resolvePageParam(), pages.value);
   },
+);
+
+watch(
+  () => visiblePages.value[0]?.page,
+  (page) => {
+    if (!page || typeof document === 'undefined') return;
+    document.title = `${formatEpisodeLabel(page, { includeTitle: true })} | 桃色CODE`;
+  },
+  { immediate: true },
 );
 
 function toImageSrc(page: MangaEpisode, filename: string) {

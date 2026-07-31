@@ -17,6 +17,7 @@ import { getMangaEpisodes } from '../lib/mangaData';
 
 interface Props {
 	title?: string;
+	description?: string;
 	drawerId?: string;
 	siteTitle?: string;
 	contentVariant?: 'top' | 'viewer' | 'default';
@@ -24,6 +25,7 @@ interface Props {
 
 const {
 	title = '桃色CODE',
+	description,
 	drawerId = 'app-drawer',
 	siteTitle = '桃色CODE',
 	contentVariant = 'default',
@@ -38,7 +40,7 @@ const hasMobile = Astro.slots.has('mobile');
 const hasDrawer = Astro.slots.has('drawer');
 ---
 
-<Layout title={title}>
+<Layout title={title} description={description}>
 	<div class="site-modern min-h-screen bg-base-100">
 		<!-- Desktop: left sidebar + expanded content -->
 		<div class="hidden lg:block">

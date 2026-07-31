@@ -14,8 +14,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import type { MangaEpisode } from '../lib/mangaData';
+import { formatEpisodeLabel } from '../lib/mangaData';
 import { findEpisodeByPage, readPageParamFromLocation } from '../lib/viewerPage';
 
 const props = defineProps<{
@@ -25,6 +26,15 @@ const props = defineProps<{
 const pageParam = ref(readPageParamFromLocation());
 const pages = computed(() => props.mangaEpisodes ?? []);
 const episode = computed(() => findEpisodeByPage(pageParam.value, pages.value));
+
+watch(
+  episode,
+  (ep) => {
+    if (!ep || typeof document === 'undefined') return;
+    document.title = `${formatEpisodeLabel(ep, { includeTitle: true })} | 桃色CODE`;
+  },
+  { immediate: true },
+);
 
 function syncPageParam() {
   pageParam.value = readPageParamFromLocation();

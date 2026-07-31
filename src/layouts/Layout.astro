@@ -3,9 +3,13 @@ import '../assets/app.css';
 
 interface Props {
 	title?: string;
+	description?: string;
 }
 
-const { title = 'Mostro' } = Astro.props;
+const {
+	title = '桃色CODE',
+	description = '雑談や日常のひとコマを描いた4コマ漫画「桃色CODE」の掲載サイトです。',
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -17,6 +21,12 @@ const { title = 'Mostro' } = Astro.props;
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="ja_JP" />
+		<meta name="twitter:card" content="summary" />
 		<script is:inline>
 			(() => {
 				const root = document.documentElement;

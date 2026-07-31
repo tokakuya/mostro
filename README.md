@@ -1,48 +1,41 @@
-# Astro Starter Kit: Basics
+# Mostro（桃色CODE）
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+「桃色CODE」— 雑談や日常のひとコマを描いた4コマ漫画の掲載サイトです。**Astro** / **Vue 3** / **Tailwind CSS v4** / **DaisyUI v5** で構築された、データベースや外部サービスに依存しない完全な静的サイトです。
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+過去のFC2ブログのレイアウトを再現した「vintageモード」も切り替えて利用できます。
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## 🚀 プロジェクト構成
 
 ```text
 /
-├── public/
-│   └── favicon.svg
+├── public/                 favicon などの静的ファイル
 ├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
+│   ├── assets/manga/       各話の漫画画像
+│   ├── assets/top/         トップページのヒーロー画像・アーカイブ
+│   ├── assets/vintage/     vintageモード用アセット
+│   ├── components/         Astro / Vue コンポーネント
+│   ├── layouts/            ページレイアウト
+│   ├── lib/                漫画データの読み込み・整形ロジック
+│   └── pages/               ルーティング（/, /viewer, /manga.json）
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+ビューアーはクライアントサイドで動作し、`pnpm build` の出力は `/`・`/viewer`・`/manga.json` の数ページのみです。各話・各ページは `?page=<n>` パラメータをもとに Vue コンポーネントが実行時に描画します。
 
-## 🧞 Commands
+## 🧞 コマンド
 
-All commands are run from the root of the project, from a terminal:
+すべてプロジェクトルートで実行します。
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+| コマンド              | 内容                                              |
+| :-------------------- | :------------------------------------------------ |
+| `pnpm install`         | 依存関係のインストール                             |
+| `pnpm dev`             | ローカル開発サーバーを起動（`localhost:4321`）      |
+| `pnpm build`           | 本番用ビルドを `./dist/` に出力                    |
+| `pnpm preview`         | ビルド済みサイトをローカルでプレビュー              |
+| `pnpm astro ...`       | `astro add` など Astro CLI コマンドを実行           |
 
-## 👀 Want to learn more?
+## 🛠️ 技術スタック
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## testaskme
+- [Astro](https://astro.build) — 静的サイトジェネレーター
+- [Vue 3](https://vuejs.org) — ビューアーのインタラクティブ部分
+- [Tailwind CSS v4](https://tailwindcss.com) / [DaisyUI v5](https://daisyui.com) — スタイリング
