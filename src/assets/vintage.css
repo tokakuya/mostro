@@ -244,7 +244,7 @@ html[data-vintage='true'] .viewer-modern {
 }
 
 /* Neutralize modern wrappers inside vintage content */
-html[data-vintage='true'] .vintage-content-column > :global(*) {
+html[data-vintage='true'] .vintage-content-column > * {
 	border: none !important;
 	background: transparent !important;
 	box-shadow: none !important;
