@@ -3,19 +3,22 @@ import '../assets/app.css';
 
 interface Props {
 	title?: string;
+	description?: string;
 }
 
-const { title = 'Mostro' } = Astro.props;
+const { title = 'Mostro', description = '桃色CODEの公式マンガビューアサイトです。' } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="ja" data-theme="light">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#ec4899" />
 		<title>{title}</title>
 		<script is:inline>
 			(() => {

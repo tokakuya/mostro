@@ -163,6 +163,17 @@ watch(
   },
 );
 
+watch(
+  () => range.value.min,
+  () => {
+    if (typeof document === 'undefined') return;
+    const page = pages.value[range.value.min];
+    if (!page) return;
+    document.title = `第${page.Index}話 ${page.Title} | 桃色CODE`;
+  },
+  { immediate: true },
+);
+
 function toImageSrc(page: MangaEpisode, filename: string) {
   if (isAbsoluteImageUrl(filename)) return filename;
   const { deployPath } = buildImagePaths(page, filename);

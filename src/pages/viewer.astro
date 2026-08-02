@@ -8,7 +8,11 @@ import { getMangaEpisodes } from '../lib/mangaData';
 const mangaEpisodes = getMangaEpisodes();
 ---
 
-<ThreePanel title="Viewer" contentVariant="viewer">
+<ThreePanel
+	title="ビューア | 桃色CODE"
+	description="桃色CODEのマンガをブラウザで読めるビューアページです。"
+	contentVariant="viewer"
+>
 	<div class="viewer-modern">
 		<ContentColumn class="border border-base-300 bg-base-100">
 			<ViewerContent client:only="vue" mangaEpisodes={mangaEpisodes} />
