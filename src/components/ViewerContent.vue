@@ -4,7 +4,13 @@
       <button class="btn-nav" type="button" @click="beforeContent">▲前のお話▲</button>
     </div>
 
-    <div v-for="{ index: i, page } in visiblePages" :key="`ep-${i}`" class="episode-block">
+    <div
+      v-for="{ index: i, page } in visiblePages"
+      :key="`ep-${i}`"
+      :ref="(el) => setEpisodeRef(i, el as Element | null)"
+      :data-episode-index="i"
+      class="episode-block"
+    >
       <img
         v-for="(name, j) in page.ImageUrl"
         :key="`img-${i}-${j}`"
@@ -34,6 +40,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import type { MangaEpisode } from '../lib/mangaData';
+import { SITE_NAME } from '../lib/site';
 
 function debounce<T extends (...args: any[]) => void>(fn: T, wait: number) {
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -77,6 +84,37 @@ const canShowBefore = computed(() => visibleIndices.value.length > 0 && range.va
 const canShowAfter = computed(
   () => visibleIndices.value.length > 0 && pages.value.length - 1 > range.value.max,
 );
+
+const episodeRefs = new Map<number, Element>();
+let titleObserver: IntersectionObserver | undefined;
+
+function setEpisodeRef(index: number, el: Element | null) {
+  const previous = episodeRefs.get(index);
+  if (previous && previous !== el) titleObserver?.unobserve(previous);
+
+  if (el) {
+    episodeRefs.set(index, el);
+    titleObserver?.observe(el);
+  } else {
+    episodeRefs.delete(index);
+  }
+}
+
+function updateDocumentTitle(index: number) {
+  const page = pages.value[index];
+  if (!page || typeof document === 'undefined') return;
+  document.title = `第${page.Index}話 ${page.Title} | ${SITE_NAME}`;
+}
+
+function onTitleIntersect(entries: IntersectionObserverEntry[]) {
+  const visible = entries
+    .filter((entry) => entry.isIntersecting)
+    .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+  if (!visible) return;
+
+  const index = Number((visible.target as HTMLElement).dataset.episodeIndex);
+  if (Number.isFinite(index)) updateDocumentTitle(index);
+}
 
 const preloadedEpisodeIndices = new Set<number>();
 
@@ -153,8 +191,23 @@ const onScroll = debounce(() => {
   if (bottomVisible()) addContent();
 }, 200);
 
-onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }));
-onUnmounted(() => window.removeEventListener('scroll', onScroll));
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  if (visiblePages.value[0]) updateDocumentTitle(visiblePages.value[0].index);
+
+  titleObserver = new IntersectionObserver(onTitleIntersect, {
+    rootMargin: '-40% 0px -40% 0px',
+    threshold: 0,
+  });
+  for (const el of episodeRefs.values()) titleObserver.observe(el);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll);
+  titleObserver?.disconnect();
+  titleObserver = undefined;
+});
 
 watch(
   () => props.initialPage,

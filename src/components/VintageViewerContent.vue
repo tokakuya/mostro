@@ -14,9 +14,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import type { MangaEpisode } from '../lib/mangaData';
 import { findEpisodeByPage, readPageParamFromLocation } from '../lib/viewerPage';
+import { SITE_NAME } from '../lib/site';
 
 const props = defineProps<{
   mangaEpisodes: MangaEpisode[];
@@ -25,6 +26,16 @@ const props = defineProps<{
 const pageParam = ref(readPageParamFromLocation());
 const pages = computed(() => props.mangaEpisodes ?? []);
 const episode = computed(() => findEpisodeByPage(pageParam.value, pages.value));
+
+watch(
+  episode,
+  (current) => {
+    if (current && typeof document !== 'undefined') {
+      document.title = `第${current.Index}話 ${current.Title} | ${SITE_NAME}`;
+    }
+  },
+  { immediate: true },
+);
 
 function syncPageParam() {
   pageParam.value = readPageParamFromLocation();

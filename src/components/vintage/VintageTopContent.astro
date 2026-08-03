@@ -1,5 +1,6 @@
 ---
 import { getMangaEpisodes } from '../../lib/mangaData';
+import { SITE_NAME } from '../../lib/site';
 
 const heroCandidates = import.meta.glob<{ default: { src: string; width: number; height: number } }>(
 	'../../assets/top/**/top.*',
@@ -26,7 +27,7 @@ const updateLog = `●04-01 ホームページをリニューアルしました
 				src={hero.src}
 				width={hero.width}
 				height={hero.height}
-				alt="top"
+				alt={SITE_NAME}
 				decoding="async"
 				loading="eager"
 			/>
