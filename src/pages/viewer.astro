@@ -8,7 +8,11 @@ import { getMangaEpisodes } from '../lib/mangaData';
 const mangaEpisodes = getMangaEpisodes();
 ---
 
-<ThreePanel title="Viewer" contentVariant="viewer">
+<ThreePanel
+	title="Viewer"
+	description="『ぱっく〜と数コマ』を話数ごとに読めるビューアーページ。"
+	contentVariant="viewer"
+>
 	<div class="viewer-modern">
 		<ContentColumn class="border border-base-300 bg-base-100">
 			<ViewerContent client:only="vue" mangaEpisodes={mangaEpisodes} />

@@ -2,29 +2,10 @@
 import ContentColumn from './widget/ContentColumn.astro';
 import LatestEpisodeCard from './widget/LatestEpisodeCard.astro';
 import { getMangaEpisodes } from '../lib/mangaData';
+import { getTopHeroImage } from '../lib/heroImage';
 
 const episodes = getMangaEpisodes();
-
-function pickHero() {
-	const heroCandidates = import.meta.glob<{ default: { src: string; width: number; height: number } }>(
-		'../assets/top/**/top.*',
-		{ eager: true },
-	);
-	const entries = Object.entries(heroCandidates).map(([path, mod]) => ({
-		path,
-		image: mod.default,
-	}));
-
-	const preferWebp = entries.find((e) => e.path.endsWith('/top.webp'));
-	if (preferWebp) return preferWebp.image;
-
-	const preferJpg = entries.find((e) => e.path.endsWith('/top.jpg'));
-	if (preferJpg) return preferJpg.image;
-
-	return undefined;
-}
-
-const hero = pickHero();
+const hero = getTopHeroImage();
 const latest = episodes.at(-1);
 ---
 

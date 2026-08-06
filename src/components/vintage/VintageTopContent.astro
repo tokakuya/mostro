@@ -1,17 +1,7 @@
 ---
-import { getMangaEpisodes } from '../../lib/mangaData';
+import { getTopHeroImage } from '../../lib/heroImage';
 
-const heroCandidates = import.meta.glob<{ default: { src: string; width: number; height: number } }>(
-	'../../assets/top/**/top.*',
-	{ eager: true },
-);
-const heroEntries = Object.entries(heroCandidates).map(([path, mod]) => ({
-	path,
-	image: mod.default,
-}));
-const hero =
-	heroEntries.find((e) => e.path.endsWith('/top.webp'))?.image ??
-	heroEntries.find((e) => e.path.endsWith('/top.jpg'))?.image;
+const hero = getTopHeroImage();
 
 const updateLog = `●04-01 ホームページをリニューアルしました
 ●旧FC2サイトのデザインをビンテージモードで再現できます`;

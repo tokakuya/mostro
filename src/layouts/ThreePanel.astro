@@ -14,9 +14,11 @@ import VintageShell from '../components/vintage/VintageShell.astro';
 import VintageTopContent from '../components/vintage/VintageTopContent.astro';
 import Layout from './Layout.astro';
 import { getMangaEpisodes } from '../lib/mangaData';
+import { getTopHeroImage } from '../lib/heroImage';
 
 interface Props {
 	title?: string;
+	description?: string;
 	drawerId?: string;
 	siteTitle?: string;
 	contentVariant?: 'top' | 'viewer' | 'default';
@@ -24,13 +26,17 @@ interface Props {
 
 const {
 	title = '桃色CODE',
+	description = '個人サークル「桃色CODE」の4コマ漫画『ぱっく〜と数コマ』を無料で読めるビューアーサイト。',
 	drawerId = 'app-drawer',
 	siteTitle = '桃色CODE',
 	contentVariant = 'default',
 } = Astro.props;
 
+const pageTitle = title === siteTitle ? siteTitle : `${title} | ${siteTitle}`;
+
 const episodes = getMangaEpisodes();
 const latest = episodes.at(-1);
+const hero = getTopHeroImage();
 
 const hasLeft = Astro.slots.has('left');
 const hasMobileFooter = Astro.slots.has('mobile-footer');
@@ -38,7 +44,7 @@ const hasMobile = Astro.slots.has('mobile');
 const hasDrawer = Astro.slots.has('drawer');
 ---
 
-<Layout title={title}>
+<Layout title={pageTitle} description={description} image={hero?.src}>
 	<div class="site-modern min-h-screen bg-base-100">
 		<!-- Desktop: left sidebar + expanded content -->
 		<div class="hidden lg:block">
