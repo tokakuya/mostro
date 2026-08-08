@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "check": "astro check",
     "generate-types": "wrangler types"
   },
   "dependencies": {
@@ -29,5 +30,9 @@
   },
   "overrides": {
     "vite": "^8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.3"
   }
 }

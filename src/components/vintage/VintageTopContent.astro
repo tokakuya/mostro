@@ -1,6 +1,4 @@
 ---
-import { getMangaEpisodes } from '../../lib/mangaData';
-
 const heroCandidates = import.meta.glob<{ default: { src: string; width: number; height: number } }>(
 	'../../assets/top/**/top.*',
 	{ eager: true },

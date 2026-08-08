@@ -16,7 +16,7 @@ Standard commands are documented in `README.md` and `package.json`:
 
 ### Notes
 
-- **No dedicated lint script exists.** The project does not include `@astrojs/check` or `typescript` in `package.json`, so `pnpm astro check` will prompt to install them interactively. Avoid running it in non-interactive environments unless those deps are added first.
+- **Type checking**: `pnpm check` (or `pnpm astro check`) runs `@astrojs/check` against the Astro/Vue/TS sources. Both are in `devDependencies`, so it runs non-interactively.
 - **pnpm build scripts warning**: After `pnpm install`, pnpm warns about ignored build scripts for `esbuild`, `sharp`, and `workerd`. The dev server and build still work correctly without approving them, since esbuild ships prebuilt binaries and sharp/workerd are only needed for image optimization and Cloudflare Workers deployment respectively.
 - **Cloudflare adapter is commented out** in `astro.config.mjs`. The project builds as a static site by default.
 - **The viewer is client-side.** `pnpm build` outputs only a few static routes (`/`, `/viewer`, and the `/manga.json` data endpoint); all ~396 episodes / ~894 images in `src/assets/manga/` are navigated at runtime by the Vue viewer via `?page=<n>` rather than pre-rendered as separate pages.
