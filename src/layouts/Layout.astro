@@ -3,9 +3,15 @@ import '../assets/app.css';
 
 interface Props {
 	title?: string;
+	description?: string;
 }
 
-const { title = 'Mostro' } = Astro.props;
+const {
+	title = '桃色CODE',
+	description = '桃色CODEは4コマ漫画をオンラインで読めるビューアサイトです。',
+} = Astro.props;
+
+const ogImage = new URL('/favicon.svg', Astro.site ?? Astro.url).href;
 ---
 
 <!doctype html>
@@ -16,6 +22,15 @@ const { title = 'Mostro' } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#ec4899" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={ogImage} />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
 		<title>{title}</title>
 		<script is:inline>
 			(() => {
