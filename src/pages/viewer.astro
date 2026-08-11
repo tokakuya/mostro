@@ -8,7 +8,11 @@ import { getMangaEpisodes } from '../lib/mangaData';
 const mangaEpisodes = getMangaEpisodes();
 ---
 
-<ThreePanel title="Viewer" contentVariant="viewer">
+<ThreePanel
+	title="ビューアー"
+	description="4コマ漫画『桃色CODE』を読む。話数を選んで最新話から過去話まで閲覧できます。"
+	contentVariant="viewer"
+>
 	<div class="viewer-modern">
 		<ContentColumn class="border border-base-300 bg-base-100">
 			<ViewerContent client:only="vue" mangaEpisodes={mangaEpisodes} />
