@@ -1,7 +1,7 @@
 <template>
   <div class="viewer-content">
     <div v-if="canShowBefore" class="nav-row">
-      <button class="btn-nav" type="button" @click="beforeContent">▲前のお話▲</button>
+      <button class="btn-nav" type="button" aria-label="前のお話を表示" @click="beforeContent">▲前のお話▲</button>
     </div>
 
     <div v-for="{ index: i, page } in visiblePages" :key="`ep-${i}`" class="episode-block">
@@ -10,7 +10,7 @@
         :key="`img-${i}-${j}`"
         :src="toImageSrc(page, name)"
         :data-fallback-src="toFallbackImageSrc(page, name)"
-        :alt="`第${page.Index}話 ${page.Title}`"
+        :alt="`第${page.Index}話 ${page.Title} ${j + 1}ページ目`"
         class="img4koma"
         :loading="i === range.max ? 'eager' : 'lazy'"
         decoding="async"
@@ -23,6 +23,7 @@
         v-if="canShowAfter"
         class="btn-nav"
         type="button"
+        aria-label="次のお話を表示"
         @click="addContent()"
       >
         ▼続きを表示▼

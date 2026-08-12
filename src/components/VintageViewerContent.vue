@@ -4,7 +4,7 @@
       <template v-for="(src, index) in episode.ImageUrl" :key="`${episode.Index}-${index}`">
         <img
           :src="src"
-          :alt="`${episode.Title} ${index + 1}`"
+          :alt="`第${episode.Index}話 ${episode.Title} ${index + 1}ページ目`"
           decoding="async"
           loading="eager"
         /><br v-if="index < episode.ImageUrl.length - 1" />

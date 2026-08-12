@@ -3,20 +3,35 @@ import '../assets/app.css';
 
 interface Props {
 	title?: string;
+	description?: string;
 }
 
-const { title = 'Mostro' } = Astro.props;
+const {
+	title = '桃色CODE',
+	description = '桃色CODE は4コマ漫画を無料で読めるビューアーサイトです。',
+} = Astro.props;
+
+const pageTitle = title === '桃色CODE' ? title : `${title} | 桃色CODE`;
 ---
 
 <!doctype html>
 <html lang="ja" data-theme="light">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+		<title>{pageTitle}</title>
+		<meta name="description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="桃色CODE" />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:locale" content="ja_JP" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={description} />
 		<script is:inline>
 			(() => {
 				const root = document.documentElement;
