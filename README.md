@@ -1,48 +1,37 @@
-# Astro Starter Kit: Basics
+# 桃色CODE (Mostro)
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+A static viewer for the 桃色CODE 4-koma manga, built with [Astro](https://astro.build), Vue 3, Tailwind CSS v4, and DaisyUI v5. All ~900 manga page images live under `src/assets/manga/` and are browsed at runtime through the `/viewer` route.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## Project Structure
 
 ```text
 /
-├── public/
-│   └── favicon.svg
+├── public/                  # favicon
 ├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
+│   ├── assets/manga/        # manga page images, grouped by episode
+│   ├── assets/top/          # top page hero art and archive thumbnails
+│   ├── assets/vintage/      # legacy "vintage" theme assets
+│   ├── components/          # Astro + Vue components (widgets, viewer, vintage UI)
+│   ├── layouts/              # Layout.astro (document shell), ThreePanel.astro (page chrome)
+│   ├── lib/                  # manga data loading/parsing, site links
+│   └── pages/                # index.astro (top page), viewer.astro, manga.json.ts
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
+## Commands
 
 All commands are run from the root of the project, from a terminal:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+| Command                | Action                                        |
+| :---------------------- | :--------------------------------------------- |
+| `pnpm install`          | Installs dependencies                          |
+| `pnpm dev`              | Starts local dev server at `localhost:4321`    |
+| `pnpm build`            | Build the production site to `./dist/`         |
+| `pnpm preview`          | Preview the production build locally           |
+| `pnpm astro ...`        | Run CLI commands like `astro add`, `astro check` |
 
-## 👀 Want to learn more?
+## Notes
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## testaskme
+- The site is fully static — no database or external services. The manga viewer navigates pages client-side via `?page=<n>` rather than pre-rendering every episode as its own route.
+- The Cloudflare adapter in `astro.config.mjs` is commented out; the project builds as a plain static site by default.
+- See `AGENTS.md` for notes on running this project in agent/CI environments.
