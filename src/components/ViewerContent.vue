@@ -132,6 +132,15 @@ watch(
   { immediate: true },
 );
 
+function updateDocumentTitle() {
+  if (typeof document === 'undefined') return;
+  const page = pages.value[range.value.max];
+  if (!page) return;
+  document.title = `第${page.Index}話 ${page.Title} - 桃色CODE`;
+}
+
+watch(() => range.value.max, updateDocumentTitle, { immediate: true });
+
 function addContent(step = 1) {
   if (pages.value.length === 0 || !canShowAfter.value) return;
   visibleIndices.value.push(range.value.max + step);
