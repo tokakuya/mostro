@@ -1,5 +1,6 @@
 ---
 import '../assets/app.css';
+import defaultOgImage from '../assets/top/top.jpg';
 
 interface Props {
 	title?: string;
@@ -14,7 +15,16 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const ogImageURL = image ? new URL(image, Astro.site) : undefined;
+const ogImageURL = new URL(image ?? defaultOgImage.src, Astro.site);
+
+const websiteJsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'WebSite',
+	name: '桃色CODE',
+	url: Astro.site?.toString(),
+	description,
+	inLanguage: 'ja',
+};
 ---
 
 <!doctype html>
@@ -36,12 +46,13 @@ const ogImageURL = image ? new URL(image, Astro.site) : undefined;
 		<meta property="og:description" content={description} />
 		<meta property="og:url" content={canonicalURL} />
 		<meta property="og:locale" content="ja_JP" />
-		{ogImageURL && <meta property="og:image" content={ogImageURL} />}
+		<meta property="og:image" content={ogImageURL} />
 
-		<meta name="twitter:card" content={ogImageURL ? 'summary_large_image' : 'summary'} />
+		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
-		{ogImageURL && <meta name="twitter:image" content={ogImageURL} />}
+		<meta name="twitter:image" content={ogImageURL} />
+		<script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
 		<script is:inline>
 			(() => {
 				const root = document.documentElement;
