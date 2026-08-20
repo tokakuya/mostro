@@ -1,0 +1,36 @@
+---
+import ThreePanel from '../layouts/ThreePanel.astro';
+import ContentColumn from '../components/widget/ContentColumn.astro';
+import LatestEpisodeCard from '../components/widget/LatestEpisodeCard.astro';
+import { getMangaEpisodes } from '../lib/mangaData';
+
+const episodes = getMangaEpisodes();
+const latest = episodes.at(-1);
+---
+
+<ThreePanel
+	title="ページが見つかりません"
+	description="お探しのページは見つかりませんでした。"
+>
+	<ContentColumn>
+		<div class="border border-base-300 bg-base-100 p-6 text-center">
+			<p class="text-lg font-semibold">404 - ページが見つかりません</p>
+			<p class="mt-3 text-sm opacity-70">
+				お探しのページは移動または削除された可能性があります。
+			</p>
+
+			<div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+				<a class="btn btn-primary btn-sm" href="/">TOPへ戻る</a>
+				<a class="btn btn-outline btn-sm" href="/viewer">ビューアーへ</a>
+			</div>
+
+			{
+				latest ? (
+					<div class="mt-6 border-t border-base-300 pt-4">
+						<LatestEpisodeCard latest={latest} includeTitle buttonClass="btn btn-sm btn-outline" />
+					</div>
+				) : null
+			}
+		</div>
+	</ContentColumn>
+</ThreePanel>
