@@ -5,6 +5,8 @@
         <img
           :src="src"
           :alt="`${episode.Title} ${index + 1}`"
+          :width="episode.ImageSize?.[index]?.width"
+          :height="episode.ImageSize?.[index]?.height"
           decoding="async"
           loading="eager"
         /><br v-if="index < episode.ImageUrl.length - 1" />

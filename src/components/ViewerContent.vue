@@ -11,6 +11,8 @@
         :src="toImageSrc(page, name)"
         :data-fallback-src="toFallbackImageSrc(page, name)"
         :alt="`第${page.Index}話 ${page.Title}`"
+        :width="page.ImageSize?.[j]?.width"
+        :height="page.ImageSize?.[j]?.height"
         class="img4koma"
         :loading="i === range.max ? 'eager' : 'lazy'"
         decoding="async"
