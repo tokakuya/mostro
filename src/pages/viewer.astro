@@ -13,6 +13,11 @@ const mangaEpisodes = getMangaEpisodes();
 	description="4コマ漫画「桃色CODE」を1話から最新話まで読めるビューアーページです。"
 	contentVariant="viewer"
 >
+	<noscript>
+		<p class="p-4 text-center text-sm">
+			ビューアーの表示には JavaScript の有効化が必要です。ブラウザの設定をご確認ください。
+		</p>
+	</noscript>
 	<div class="viewer-modern">
 		<ContentColumn class="border border-base-300 bg-base-100">
 			<ViewerContent client:only="vue" mangaEpisodes={mangaEpisodes} />

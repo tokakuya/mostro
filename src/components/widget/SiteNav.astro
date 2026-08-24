@@ -6,18 +6,27 @@ interface Props {
 }
 
 const { class: className = '' } = Astro.props;
+
+const currentPath = Astro.url.pathname;
 ---
 
 <nav class:list={["menu border border-base-300 bg-base-100", className]}>
 	<ul class="menu-sm">
 		{
-			siteLinks.map((link) => (
-				<li>
-					<a class:list={[link.primary && 'font-semibold text-primary']} href={link.href}>
-						{link.label}
-					</a>
-				</li>
-			))
+			siteLinks.map((link) => {
+				const isCurrent = link.href === currentPath;
+				return (
+					<li>
+						<a
+							class:list={[link.primary && 'font-semibold text-primary']}
+							href={link.href}
+							aria-current={isCurrent ? 'page' : undefined}
+						>
+							{link.label}
+						</a>
+					</li>
+				);
+			})
 		}
 	</ul>
 </nav>
