@@ -1,8 +1,14 @@
 ---
 import ThreePanel from '../layouts/ThreePanel.astro';
 import MainPanel from '../components/MainPanel.astro';
+import topImage from '../assets/top/top.jpg';
 ---
 
-<ThreePanel title="TOP" contentVariant="top">
+<ThreePanel
+	title="TOP"
+	description="4コマ漫画「桃色CODE」を無料で読めるビューアーサイトです。最新話から一覧まで、スマホ・PCで快適に閲覧できます。"
+	image={topImage.src}
+	contentVariant="top"
+>
 	<MainPanel />
 </ThreePanel>
