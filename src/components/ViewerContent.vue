@@ -10,7 +10,7 @@
         :key="`img-${i}-${j}`"
         :src="toImageSrc(page, name)"
         :data-fallback-src="toFallbackImageSrc(page, name)"
-        :alt="`第${page.Index}話 ${page.Title}`"
+        :alt="page.ImageUrl.length > 1 ? `第${page.Index}話 ${page.Title} ${j + 1}/${page.ImageUrl.length}` : `第${page.Index}話 ${page.Title}`"
         class="img4koma"
         :loading="i === range.max ? 'eager' : 'lazy'"
         decoding="async"
