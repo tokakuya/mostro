@@ -1,48 +1,49 @@
-# Astro Starter Kit: Basics
+# 桃色CODE ビューアー
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+4コマ漫画「桃色CODE」を無料で読めるビューアーサイトです。**Astro** + **Vue 3** + **Tailwind CSS v4 / DaisyUI v5** で構築された、データベースやサーバーを持たない完全な静的サイトです。
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+公開URL: https://mo4koma.iranika.info
 
-## 🚀 Project Structure
+## 特徴
 
-Inside of your Astro project, you'll see the following folders and files:
+- 最新話から第1話まで、スマホ・PCで快適に閲覧できるビューアー
+- 通常モードに加え、レトロなFC2ブログ風の「ヴィンテージモード」を切り替え可能
+- ライト/ダークテーマの自動・手動切り替え
+- 全話・全ページを `src/assets/manga/` にローカル同梱、ビルド時に最適化
+
+## プロジェクト構成
 
 ```text
 /
-├── public/
-│   └── favicon.svg
+├── public/                # favicon, robots.txt, sitemap.xml
 ├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
+│   ├── assets
+│   │   ├── manga/          # 各話の漫画画像（約397話 / 約893枚)
+│   │   └── top/            # トップページ用イラスト・OGP画像
+│   ├── components
+│   │   ├── ViewerContent.vue        # 通常ビューアー本体
+│   │   ├── VintageViewerContent.vue # ヴィンテージビューアー本体
+│   │   ├── vintage/                 # ヴィンテージモード用コンポーネント
+│   │   └── widget/                  # ナビ・フッター等の共通パーツ
+│   ├── layouts/            # Layout.astro / ThreePanel.astro
+│   ├── lib/                 # manga データの読み込み・整形ロジック
+│   └── pages/               # index (TOP) / viewer / manga.json
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## コマンド
 
-## 🧞 Commands
+すべてプロジェクトルートで実行します。
 
-All commands are run from the root of the project, from a terminal:
+| コマンド                | 説明                                      |
+| :---------------------- | :---------------------------------------- |
+| `pnpm install`           | 依存関係をインストール                    |
+| `pnpm dev`               | 開発サーバーを起動 (`localhost:4321`)     |
+| `pnpm build`             | `./dist/` に本番ビルドを出力              |
+| `pnpm preview`           | 本番ビルドをローカルでプレビュー          |
+| `pnpm astro ...`         | `astro add` などの Astro CLI コマンド実行 |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+## 補足
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## testaskme
+- ビューアーはクライアントサイド動作です。ビルドで生成される静的ルートは `/`・`/viewer`・`/manga.json` のみで、各話は `?page=<n>` クエリを使って実行時に Vue ビューアーが描画します。
+- 開発環境に関する詳細は [`AGENTS.md`](./AGENTS.md) を参照してください。
