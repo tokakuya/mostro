@@ -6,10 +6,12 @@
 
     <div v-for="{ index: i, page } in visiblePages" :key="`ep-${i}`" class="episode-block">
       <img
-        v-for="(name, j) in page.ImageUrl"
+        v-for="(image, j) in page.ImageUrl"
         :key="`img-${i}-${j}`"
-        :src="toImageSrc(page, name)"
-        :data-fallback-src="toFallbackImageSrc(page, name)"
+        :src="toImageSrc(page, image.src)"
+        :data-fallback-src="toFallbackImageSrc(page, image.src)"
+        :width="image.width"
+        :height="image.height"
         :alt="`第${page.Index}話 ${page.Title}`"
         class="img4koma"
         :loading="i === range.max ? 'eager' : 'lazy'"
@@ -99,11 +101,11 @@ function preloadEpisodeByIndex(index: number) {
 
   preloadedEpisodeIndices.add(index);
 
-  for (const name of page.ImageUrl) {
+  for (const image of page.ImageUrl) {
     const img = new Image();
     img.decoding = 'async';
-    const primary = toImageSrc(page, name);
-    const fallback = toFallbackImageSrc(page, name);
+    const primary = toImageSrc(page, image.src);
+    const fallback = toFallbackImageSrc(page, image.src);
     img.onerror = () => {
       if (!fallback) return;
       const fallbackUrl = new URL(fallback, window.location.origin).href;

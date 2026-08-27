@@ -10,10 +10,16 @@ export interface MangaData {
 	episodes: MangaEpisode[];
 }
 
+export type MangaPageImage = {
+	src: string;
+	width: number;
+	height: number;
+};
+
 export type MangaEpisode = {
 	Index: number | string;
 	Title: string;
-	ImageUrl: string[];
+	ImageUrl: MangaPageImage[];
 };
 
 function buildEpisodes(): MangaEpisode[] {
@@ -27,7 +33,6 @@ function buildEpisodes(): MangaEpisode[] {
 			.split('_');
 
 		const imageFilename = path.replace(/^.*\//, '');
-		const imageURL = mod.default.src;
 
 		if (!episodeMap[index]) {
 			episodeMap[index] = {
@@ -38,14 +43,18 @@ function buildEpisodes(): MangaEpisode[] {
 			pageKeyMap[index] = [];
 		}
 
-		episodeMap[index].ImageUrl.push(imageURL);
+		episodeMap[index].ImageUrl.push({
+			src: mod.default.src,
+			width: mod.default.width,
+			height: mod.default.height,
+		});
 		pageKeyMap[index].push(imageFilename);
 	}
 
 	return Object.values(episodeMap)
 		.map((ep) => {
 			const keys = pageKeyMap[String(ep.Index)] ?? [];
-			const indexed = ep.ImageUrl.map((url, i) => ({ url, key: keys[i] ?? '' }));
+			const indexed = ep.ImageUrl.map((image, i) => ({ image, key: keys[i] ?? '' }));
 			indexed.sort((a, b) => {
 				const pageA = parseMangaFilename(a.key)?.pageKey ?? [0];
 				const pageB = parseMangaFilename(b.key)?.pageKey ?? [0];
@@ -53,7 +62,7 @@ function buildEpisodes(): MangaEpisode[] {
 			});
 			return {
 				...ep,
-				ImageUrl: indexed.map((v) => v.url),
+				ImageUrl: indexed.map((v) => v.image),
 			};
 		})
 		.sort((a, b) => episodeSortKey(a.Index) - episodeSortKey(b.Index));

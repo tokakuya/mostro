@@ -1,9 +1,11 @@
 <template>
   <div class="vintage-viewer-content">
     <p v-if="episode">
-      <template v-for="(src, index) in episode.ImageUrl" :key="`${episode.Index}-${index}`">
+      <template v-for="(image, index) in episode.ImageUrl" :key="`${episode.Index}-${index}`">
         <img
-          :src="src"
+          :src="image.src"
+          :width="image.width"
+          :height="image.height"
           :alt="`${episode.Title} ${index + 1}`"
           decoding="async"
           loading="eager"

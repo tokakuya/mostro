@@ -1,4 +1,5 @@
 ---
+import type { ImageMetadata } from 'astro';
 import ContentColumn from './widget/ContentColumn.astro';
 import LatestEpisodeCard from './widget/LatestEpisodeCard.astro';
 import { getMangaEpisodes } from '../lib/mangaData';
@@ -6,7 +7,7 @@ import { getMangaEpisodes } from '../lib/mangaData';
 const episodes = getMangaEpisodes();
 
 function pickHero() {
-	const heroCandidates = import.meta.glob<{ default: { src: string; width: number; height: number } }>(
+	const heroCandidates = import.meta.glob<{ default: ImageMetadata }>(
 		'../assets/top/**/top.*',
 		{ eager: true },
 	);
