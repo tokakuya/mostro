@@ -4,7 +4,12 @@
       <button class="btn-nav" type="button" @click="beforeContent">▲前のお話▲</button>
     </div>
 
-    <div v-for="{ index: i, page } in visiblePages" :key="`ep-${i}`" class="episode-block">
+    <div
+      v-for="{ index: i, page } in visiblePages"
+      :key="`ep-${i}`"
+      class="episode-block"
+      :data-episode-index="i"
+    >
       <img
         v-for="(name, j) in page.ImageUrl"
         :key="`img-${i}-${j}`"
@@ -32,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import type { MangaEpisode } from '../lib/mangaData';
 
 function debounce<T extends (...args: any[]) => void>(fn: T, wait: number) {
@@ -135,11 +140,13 @@ watch(
 function addContent(step = 1) {
   if (pages.value.length === 0 || !canShowAfter.value) return;
   visibleIndices.value.push(range.value.max + step);
+  nextTick(updateCurrentEpisode);
 }
 
 function beforeContent() {
   if (pages.value.length === 0 || !canShowBefore.value) return;
   visibleIndices.value.unshift(range.value.min - 1);
+  nextTick(updateCurrentEpisode);
 }
 
 function bottomVisible() {
@@ -151,15 +158,54 @@ function bottomVisible() {
 
 const onScroll = debounce(() => {
   if (bottomVisible()) addContent();
+  updateCurrentEpisode();
 }, 200);
 
-onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }));
+const currentIndex = ref(-1);
+
+function updateCurrentEpisode() {
+  if (typeof document === 'undefined') return;
+  const blocks = document.querySelectorAll<HTMLElement>('.episode-block[data-episode-index]');
+  const threshold = window.innerHeight * 0.3;
+  let current: number | null = null;
+  for (const block of blocks) {
+    if (block.getBoundingClientRect().top <= threshold) {
+      current = Number(block.dataset.episodeIndex);
+    } else {
+      break;
+    }
+  }
+  if (current === null && blocks.length > 0) {
+    current = Number(blocks[0].dataset.episodeIndex);
+  }
+  if (current !== null && current !== currentIndex.value) {
+    currentIndex.value = current;
+  }
+}
+
+watch(currentIndex, (idx) => {
+  if (typeof window === 'undefined') return;
+  const page = pages.value[idx];
+  if (!page) return;
+
+  document.title = `第${page.Index}話 ${page.Title} | 桃色CODE`;
+
+  const url = new URL(window.location.href);
+  url.searchParams.set('page', String(page.Index));
+  window.history.replaceState(window.history.state, '', url);
+});
+
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true });
+  updateCurrentEpisode();
+});
 onUnmounted(() => window.removeEventListener('scroll', onScroll));
 
 watch(
   () => props.initialPage,
   () => {
     visibleIndices.value = createInitialIndices(resolvePageParam(), pages.value);
+    nextTick(updateCurrentEpisode);
   },
 );
 
