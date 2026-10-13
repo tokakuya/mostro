@@ -1,48 +1,36 @@
-# Astro Starter Kit: Basics
+# Mostro
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+「桃色CODE」の4コマ漫画をまとめて読めるビューアーサイトです。**Astro** + **Vue 3** + **Tailwind CSS v4** + **DaisyUI v5** で構築された、データベースや外部サービスを持たない完全な静的サイトです。
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## プロジェクト構成
 
 ```text
 /
-├── public/
-│   └── favicon.svg
+├── public/              favicon など静的ファイル
 ├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
+│   ├── assets/manga/    4コマ画像（話数ごとのフォルダ）
+│   ├── assets/top/      トップページ用アセット
+│   ├── assets/vintage/  レトロ表示モード用アセット
+│   ├── components/      Astro / Vue コンポーネント
+│   ├── layouts/         ページレイアウト
+│   ├── lib/             データ取得・整形ロジック
+│   └── pages/           ルーティング（`/`、`/viewer`、`/manga.json`）
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 🧞 コマンド
 
-## 🧞 Commands
+すべてプロジェクトルートで実行します（Node.js 22.12.0 以上が必要です）。
 
-All commands are run from the root of the project, from a terminal:
+| コマンド                | 内容                                              |
+| :---------------------- | :------------------------------------------------ |
+| `pnpm install`           | 依存関係のインストール                            |
+| `pnpm dev`               | 開発サーバーを `localhost:4321` で起動             |
+| `pnpm build`             | `./dist/` に本番用ビルドを出力                    |
+| `pnpm preview`           | 本番ビルドをローカルでプレビュー                  |
+| `pnpm astro ...`         | Astro CLI コマンド（`astro add`、`astro check` など） |
+| `pnpm generate-types`    | Cloudflare Workers 用の型定義を生成               |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+## 開発メモ
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## testaskme
+セットアップ上の注意点（lint スクリプトが無いこと、Cloudflare アダプタが無効化されていることなど）は [AGENTS.md](./AGENTS.md) を参照してください。
